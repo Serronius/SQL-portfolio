@@ -1,10 +1,37 @@
 ##Code to calculate total sums of each respective area
 
-SELECT Steps.Time, SUM(HourlyCalories) TotalCalories, Sum(StepTotal) TotalSteps, ROUND(Sum(AverageIntensity),2) TotalIntensity
+SELECT 
+  Steps.Time, 
+  SUM(HourlyCalories) TotalCalories, 
+  Sum(StepTotal) TotalSteps, 
+  ROUND(
+    Sum(AverageIntensity), 
+    2
+  ) TotalIntensity 
+FROM 
+  `project-350003.fitness.hourlyCalories_merged` Calories 
+  JOIN `project-350003.fitness.hourlySteps_merged` Steps ON Steps.Time = Calories.Time 
+  AND Steps.Id = Calories.Id 
+  AND Steps.Date = Calories.Date 
+  JOIN `project-350003.fitness.hourlyIntensities_merged` Intensity ON Steps.Time = Intensity.Time 
+  AND Steps.Id = Intensity.Id 
+  AND Steps.Date = Intensity.Date 
+GROUP BY 
+  Steps.Time 
+ORDER BY 
+  TotalCalories DESC
+
+##Code to calculate total averages of each respective area // JOINING the hourlySteps and hourlyIntensities charts together to provide deeper analysis
+SELECT Steps.Time,
+       SUM(HourlyCalories) TotalCalories,
+       Sum(StepTotal) TotalSteps,
+       ROUND(Sum(AverageIntensity), 2) TotalIntensity
 FROM `project-350003.fitness.hourlyCalories_merged` Calories
-JOIN `project-350003.fitness.hourlySteps_merged` Steps
-ON Steps.Time = Calories.Time AND Steps.Id = Calories.Id AND Steps.Date = Calories.Date
-JOIN `project-350003.fitness.hourlyIntensities_merged` Intensity
-ON Steps.Time = Intensity.Time AND Steps.Id = Intensity.Id AND Steps.Date = Intensity.Date
+JOIN `project-350003.fitness.hourlySteps_merged` Steps ON Steps.Time = Calories.Time
+AND Steps.Id = Calories.Id
+AND Steps.Date = Calories.Date
+JOIN `project-350003.fitness.hourlyIntensities_merged` Intensity ON Steps.Time = Intensity.Time
+AND Steps.Id = Intensity.Id
+AND Steps.Date = Intensity.Date
 GROUP BY Steps.Time
 ORDER BY TotalCalories DESC
