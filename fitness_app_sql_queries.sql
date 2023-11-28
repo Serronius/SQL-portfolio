@@ -1,4 +1,5 @@
-##Code to calculate total sums of each respective area
+--Code to calculate total sums of each respective areas (Calories, Steps, Intensity) throughout the span of the day 
+--*Kaggle Report highlights most active timeslots in the day*
 
 SELECT 
   Steps.Time, 
@@ -21,7 +22,7 @@ GROUP BY
 ORDER BY 
   TotalCalories DESC
 
-##Code to calculate total averages of each respective area // JOINING the hourlySteps and hourlyIntensities charts together to provide deeper analysis
+--Code to calculate total averages of each respective areas (Calories, Steps, Intensity) // JOINING the hourlySteps and hourlyIntensities charts together to provide deeper analysis
 SELECT Steps.Time,
        SUM(HourlyCalories) TotalCalories,
        Sum(StepTotal) TotalSteps,
@@ -36,7 +37,7 @@ AND Steps.Date = Intensity.Date
 GROUP BY Steps.Time
 ORDER BY TotalCalories DESC
 
-##Sleep per night
+--Sleep per night
 
 SELECT EXTRACT(DAYOFWEEK
                FROM SleepDay)SleepDay,
@@ -61,9 +62,7 @@ GROUP BY DayOfWeek
 ORDER BY DayofWeek
 
 
-## Joining together users who submitted DATA
-FOR activity levels AS well AS sleep DATA
-FOR that same DAY
+--Joining together users who submitted DATFOR activity levels as well AS sleep DATA FOR that same DAY
 SELECT dA.ActivityDate,
        dA.Id,
        SUM(VeryActiveMinutes+FairlyActiveMinutes+LightlyActiveMinutes+SedentaryMinutes)ActivityLevel,
