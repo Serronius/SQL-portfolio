@@ -21,6 +21,8 @@ FROM
   ) ranked 
 WHERE 
   r = 1;
+
+
 --Ranking top 10 highest earning games
 SELECT 
   releasedate, 
@@ -54,7 +56,9 @@ FROM
 ORDER BY 
   totalearnings DESC 
 LIMIT 
-  10 --Top Earning games by GENRE
+  10 
+  
+--Top Earning games by GENRE
 SELECT 
   genre, 
   game, 
@@ -77,6 +81,8 @@ FROM
   ) ranked 
 WHERE 
   r = 1;
+
+
 --Most Players by Game
 SELECT 
   Game, 
@@ -85,7 +91,10 @@ SELECT
 FROM 
   `esports_earnings.GED` 
 ORDER BY 
-  TotalPlayers DESC --Most Tournaments by Game
+  TotalPlayers DESC 
+  
+  
+  --Most Tournaments by Game
 SELECT 
   Game, 
   TotalPlayers, 
@@ -93,7 +102,10 @@ SELECT
 FROM 
   `esports_earnings.GED` 
 ORDER BY 
-  TotalTournaments DESC --Total Earnings in the Esports Scene by Year 
+  TotalTournaments DESC 
+  
+  
+  --Total Earnings in the Esports Scene by Year 
 SELECT 
   Year, 
   SUM(Earnings) YearlyEarnings 
@@ -102,7 +114,10 @@ FROM
 GROUP BY 
   Year 
 ORDER BY 
-  Year ASC --Highest Earning Genres Yearly
+  Year ASC 
+  
+  
+  --Highest Earning Genres Yearly
 SELECT 
   Year, 
   Genre, 
@@ -115,7 +130,10 @@ GROUP BY
   Genre 
 ORDER BY 
   Year DESC, 
-  YearlyEarnings Desc --Earnings per year top 5 games (CSGO, Dota, LOL, FN, SC2) - window function on the Game possible
+  YearlyEarnings Desc 
+  
+  
+  --Earnings per year top 5 games (CSGO, Dota, LOL, FN, SC2) - window function on the Game possible
 SELECT 
   CAST(Date AS date FORMAT 'MM/YYYY') Date, 
   Game, 
@@ -137,7 +155,10 @@ GROUP BY
   Date, 
   Game 
 ORDER BY 
-  Game DESC --Tournaments per year top 5 games
+  Game DESC 
+  
+  
+  --Tournaments per year top 5 games
 SELECT 
   CAST(Date AS date FORMAT 'MM/YYYY') Date, 
   Game, 
