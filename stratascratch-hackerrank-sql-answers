@@ -1,5 +1,8 @@
+--Here are a few of the coding answers to a few specific HackerRank and StrataScratch problems that have been regularly used in Job Interviews for FAANG Companies - solutions are my own
+
+
 --Contest Leaderboard
-https://www.hackerrank.com/challenges/contest-leaderboard/problem
+--https://www.hackerrank.com/challenges/contest-leaderboard/problem
 
 select
     h.hacker_id,
@@ -29,7 +32,7 @@ order by
 
 	
 --The Pads
-https://www.hackerrank.com/challenges/the-pads/problem
+--https://www.hackerrank.com/challenges/the-pads/problem
 
 SELECT CONCAT(name,'(',SUBSTRING(Occupation, 1, 1),')') as name   
 from Occupations
@@ -53,7 +56,7 @@ FROM fraud_score) fraud_ranked
 WHERE r <= 0.05
 
 --Top 5 States With 5 Star Businesses
-https://platform.stratascratch.com/coding/10046-top-5-states-with-5-star-businesses?code_type=1
+--https://platform.stratascratch.com/coding/10046-top-5-states-with-5-star-businesses?code_type=1
 
 SELECT
     state
@@ -73,7 +76,7 @@ where r < 5
 
 
 --Highest Energy Consumption
-https://platform.stratascratch.com/coding/10064-highest-energy-consumption
+--https://platform.stratascratch.com/coding/10064-highest-energy-consumption
 
 SELECT date, total_eng
 
@@ -94,7 +97,7 @@ GROUP BY date) fb_ww_ranked
 where r =1
 
 --Apple Product Counts
-https://platform.stratascratch.com/coding/10141-apple-product-counts
+--https://platform.stratascratch.com/coding/10141-apple-product-counts
 
 SELECT 
     language,
@@ -110,7 +113,7 @@ ORDER BY n_total_users DESC
 
 
 --Highest Salary in Department
-https://platform.stratascratch.com/coding/9897-highest-salary-in-department
+--https://platform.stratascratch.com/coding/9897-highest-salary-in-department
 
 SELECT first_name, department, salary
 
