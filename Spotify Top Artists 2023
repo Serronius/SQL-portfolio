@@ -1,3 +1,6 @@
+--Dataset from https://www.kaggle.com/datasets/nelgiriyewithana/top-spotify-songs-2023
+
+
 --Average Danceability per SINGLE artist (no collaborations- remove WHERE for collabs)
 SELECT artists_names,
        ROUND(AVG("danceability_%"), 2) as Average_Danceability
@@ -16,10 +19,12 @@ GROUP BY artists_names
 ORDER BY SUM(streams) desc, avg_danceability desc
 LIMIT 10;
 
+
 --Top 10 most streamed songs
 SELECT track_name, artists_names,streams, "danceability_%" FROM spotify_2023
 ORDER BY streams DESC
 LIMIT 10;
+
 
 --Streams over months which one has the most?
 SELECT
@@ -30,6 +35,7 @@ FROM spotify_2023
     GROUP BY released_month
 ORDER BY released_month asc
 
+
 --Relationship between amount of words/lyrics vs streams?
 SELECT
     spotify_2023."speechiness_%",
@@ -38,6 +44,7 @@ SELECT
 FROM spotify_2023
 GROUP BY "speechiness_%"
 ORDER BY "speechiness_%"
+
 
 --Relationship between BPM and streams for songs
 SELECT
@@ -88,6 +95,7 @@ WITH artistStreams AS (
    -- HAVING count(artists_names) > 1
     --Jimin, NewJeans etc... releasing multiple songs in 2023 that reached above the average streams.
 )
+
 SELECT
     names,
     avg_streams
