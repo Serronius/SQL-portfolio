@@ -7,3 +7,5 @@ The Raw Dataset was acquired through Kaggle and gathered through Amazon's MTurk 
 Data was cleaned through Google Sheets and Graphs were developed in Excel
 
 To see the full analysis with a case report/graphs/charts visit here: https://www.kaggle.com/code/joshuabhagwandin/bellabeat-google-coursera-capstone-case-study
+
+[img] https://i.imgur.com/4LLgIsT.png [/img]
