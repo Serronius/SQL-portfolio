@@ -1,0 +1,193 @@
+--I collected this data personally from my part-time job working as an Walmart+ OGP Member. data will be updated for each shift worked //1-20-2024
+
+
+--Creating a table that tracks my performance for the 22 days of December 2023 that I worked. Data represents individual items that were picked for Walmart+ Delivery
+--service. This data was to track my progress and which category of products I picked the most from. Products were essentially classified in 5 major categories
+--with OTHER being added for things such as oversized orders
+--Ambient (mainly groceries- high volume)
+--Produce (vegetable specific orders)
+--Chilled (meats, deli, cheeses)
+--Frozen (frozen meats, instant dinners, frozen veggies etc...
+--General (general merchandise; deodorant, pet food, makeup, vitamins, clothes etc...)
+--The Data represents the creation of two tables: (1) A Summary Table of each day I worked in December and January and (2) An individual order table from January 17th and onward for the months specific
+
+CREATE TABLE digital_orders
+(
+    id SERIAL PRIMARY KEY NOT NULL ,
+    pick_walks INTEGER,
+    orders INTEGER,
+    ambient INTEGER,
+    produce INTEGER,
+    chilled INTEGER,
+    frozen INTEGER,
+    general INTEGER,
+    other INTEGER,
+    total INTEGER
+);
+
+
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (15, 48, 244, 24, 86, 24, 5, 9, 428);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (13, 55, 321, 11, 34, 22, 0, 9, 397);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (10, 59, 222, 16, 45, 25, 14, 11, 333);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (14, 44, 126, 32, 66, 13, 6, 25, 328);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (17, 66, 351, 4, 24, 85, 21, 26, 511);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (12, 59, 311, 9, 26, 16, 34, 20, 416);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (11, 66, 217, 32, 24, 35, 6, 31, 345);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (10, 46, 147, 6, 24, 54, 8, 5, 244);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (10, 41, 168, 35, 32, 34, 2, 15, 277);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (12, 56, 199, 24, 54, 51, 2, 16, 346);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (18, 67, 377, 11, 65, 15, 0, 35, 503);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (12, 49, 124, 12, 66, 20, 0, 16, 238);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (12, 54, 134, 26, 70, 21, 0, 8, 259);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (10, 59, 264, 5, 64, 31, 6, 14, 384);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (16, 68, 301, 9, 55, 27, 11, 21, 424);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (11, 55, 123, 18, 54, 16, 18, 16, 245);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (13, 45, 421, 21, 50, 20, 2, 19, 533);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (17, 59, 404, 22, 64, 23, 0, 35, 548);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (13, 49, 216, 16, 68, 35, 0, 11, 346);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (15, 53, 266, 18, 77, 16, 0, 14, 391);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (14, 49, 211, 46, 41, 18, 2, 25, 343);
+INSERT INTO digital_orders_december2023 (pick_walks,orders,ambient, produce, chilled, frozen, general, other, total) VALUES (9, 40, 197, 11, 21, 33, 2, 17, 281);
+
+
+--Which id (day) of working had the lowest total picks/highest?
+SELECT id, total
+FROM (SELECT id,
+             total,
+             rank() over (order by total asc) rank
+      FROM digital_orders_december2023) low
+WHERE rank = 1
+UNION ALL
+SELECT id, total
+FROM (SELECT id,
+             total,
+             rank() over (order by total desc) rank
+      FROM digital_orders_december2023) high
+WHERE rank = 1;
+
+--OR THIS WAY simpler
+SELECT id, total
+FROM (SELECT id, total FROM digital_orders_december2023 ORDER BY total desc limit 1)high
+UNION ALL
+SELECT id, total
+FROM (SELECT id, total FROM digital_orders_december2023 ORDER BY total asc limit 1)low
+
+--Determining how many days I picked more than the average total picks for all days. (swap > or < for days i did not reach the avg)
+SELECT *
+FROM digital_orders_december2023
+WHERE total > (SELECT AVG(total) from digital_orders_december2023);
+
+--Summation of all pick categories to double check math on the category summations not equaling the total (data check)
+SELECT *
+FROM
+(SELECT id,
+    ambient,
+    produce,
+    chilled,
+    frozen,
+    general,
+    other,
+    SUM(ambient)+SUM(produce)+SUM(chilled)+SUM(frozen)+SUM(general)+SUM(other)category_sum,
+    total
+FROM digital_orders_december2023
+GROUP BY id)sub
+WHERE category_sum != total;
+
+---**** Updating the entries will cause the query above to return empty! ****
+
+--delete the entries?
+DELETE FROM digital_orders_december2023 WHERE id IN (1, 4, 9);
+--or fix them (which we will do)
+UPDATE digital_orders_december2023 SET total = 392 WHERE id = 1;
+UPDATE digital_orders_december2023 SET total = 268 WHERE id = 4;
+UPDATE digital_orders_december2023 SET total = 286 WHERE id = 9;
+
+
+--I want to see what the averages for each categories were and compare them to which days I performed better than the average
+SELECT id, ambient, (SELECT ROUND(AVG(ambient), 2) from digital_orders_december2023) avg
+FROM digital_orders_december2023
+WHERE ambient > (SELECT AVG(ambient) from digital_orders_december2023);
+
+SELECT id, produce, (SELECT ROUND(AVG(produce), 2) from digital_orders_december2023) avg
+FROM digital_orders_december2023
+WHERE produce > (SELECT AVG(produce) from digital_orders_december2023);
+
+SELECT id, chilled, (SELECT ROUND(AVG(chilled), 2) from digital_orders_december2023) avg
+FROM digital_orders_december2023
+WHERE chilled > (SELECT AVG(chilled) from digital_orders_december2023);
+
+SELECT id, frozen, (SELECT ROUND(AVG(frozen), 2) from digital_orders_december2023) avg
+FROM digital_orders_december2023
+WHERE frozen > (SELECT AVG(frozen) from digital_orders_december2023);
+
+SELECT id, general, (SELECT ROUND(AVG(general), 2) from digital_orders_december2023) avg
+FROM digital_orders_december2023
+WHERE general > (SELECT AVG(general) from digital_orders_december2023)
+GROUP BY id;
+
+SELECT id, other, (SELECT ROUND(AVG(other), 2) from digital_orders_december2023) avg
+FROM digital_orders_december2023
+WHERE other > (SELECT AVG(other) from digital_orders_december2023)
+GROUP BY id;
+
+--Simple query, converting orders from an int to get a decimal answer or you can do orders*1.0
+SELECT id, orders, pick_walks, orders::float/pick_walks as Orders_to_pick_ratio
+FROM digital_orders_december2023
+
+
+--Creating a table that logs the individual pickwalks with a breakdown of how many orders(totes) were used, the date, the number of items for that type of order, and the pick rate for that specific order
+CREATE TABLE daily_digital_orders_january2024 (
+    id SERIAL PRIMARY KEY,
+    work_date DATE,
+    order_number INTEGER,
+    number_orders INTEGER,
+    items INTEGER,
+    order_type TEXT,
+    order_pick_rate DOUBLE PRECISION
+);
+-- inserting the data i collected after two days of recording it
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-17', 1, 4, 6, 'Oversize', 251.17);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-17', 2, 6, 72, 'Chilled', 261.03);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-17', 3, 8, 67, 'Ambient', 242.09);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-17', 4, 6, 50, 'Ambient', 196.29);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-17', 5, 5, 7, 'Action Alley', 518);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-17', 6, 6, 62, 'Chilled', 250.59);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-17', 7, 7, 10, 'Action Alley', 456.35);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-17', 8, 5, 25, 'Chilled', 151.34);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-17', 9, 8, 62, 'Ambient', 221.65);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-17', 10, 8, 70, 'Ambient', 239.38);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-17', 11, 3, 33, 'Ambient', 109.17);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-17', 12, 1, 3, 'Oversize', 682.85);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-17', 13, 1, 8, 'Oversize', 898.54);
+
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-19', 1, 8, 38, 'Frozen', 217.14);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-19', 3, 3, 3, 'Produce', 63.16);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-19', 3, 8, 51, 'Ambient', 231.15);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-19', 4, 8, 13, 'Action Alley', 409);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-19', 5, 6, 24, 'Chilled', 197.30);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-19', 6, 8, 75, 'Ambient', 271.36);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-19', 7, 6, 9, 'Produce', 108.54);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-19', 8, 8, 72, 'Ambient', 175.61);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-19', 9, 6, 3, 'Frozen', 191.61);
+INSERT INTO daily_digital_orders_january2024 (work_date, order_number, number_orders, items, order_type, order_pick_rate) VALUES ('2024-01-19', 10, 8, 50, 'Ambient', 204.45);
+
+
+--Creating a table that is just like the December Chart that essentially summarizes the individual data to a Day-Perspective with DATE primary key linking to the Daily Table
+CREATE TABLE digital_orders_january2024 (
+    date DATE PRIMARY KEY,
+    total_pickwalks INTEGER,
+    total_orders INTEGER,
+    ambient INTEGER,
+    chilled INTEGER,
+    frozen INTEGER,
+    produce INTEGER,
+    other INTEGER,
+    total_items INTEGER,
+    final_pickrate double precision
+);
+
+INSERT INTO digital_orders_january2024 (date, total_pickwalks, total_orders, ambient, chilled, frozen, produce, other, total_items, final_pickrate)
+    VALUES ('2024-01-17', 12, 68, 282, 259, 0, 0, 34, 575, 220.96);
+
+INSERT INTO digital_orders_january2024 (date, total_pickwalks, total_orders, ambient, chilled, frozen, produce, other, total_items, final_pickrate)
+    VALUES ('2024-01-19', 10, 69, 248, 24, 71, 12, 13, 368, 208.26);
