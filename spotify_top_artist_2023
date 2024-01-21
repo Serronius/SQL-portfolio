@@ -1,0 +1,98 @@
+--Average Danceability per SINGLE artist (no collaborations- remove WHERE for collabs)
+SELECT artists_names,
+       ROUND(AVG("danceability_%"), 2) as Average_Danceability
+FROM spotify_2023
+WHERE artist_count = 1
+GROUP BY artists_names
+ BY Average_Danceability desc
+
+--Who are the top 10 artists and their avg dance,energy
+SELECT artists_names,
+       ROUND(AVG(spotify_2023."danceability_%"), 2) as avg_danceability,
+       ROUND(AVG(spotify_2023."energy_%"), 2)       as avg_energy,
+       sum(streams)
+FROM spotify_2023
+GROUP BY artists_names
+ORDER BY SUM(streams) desc, avg_danceability desc
+LIMIT 10;
+
+--Top 10 most streamed songs
+SELECT track_name, artists_names,streams, "danceability_%" FROM spotify_2023
+ORDER BY streams DESC
+LIMIT 10;
+
+--Streams over months which one has the most?
+SELECT
+    released_month,
+    SUM(spotify_2023.streams) as sum_of_streams,
+    AVG(spotify_2023.streams) as avg_streams
+FROM spotify_2023
+    GROUP BY released_month
+ORDER BY released_month asc
+
+--Relationship between amount of words/lyrics vs streams?
+SELECT
+    spotify_2023."speechiness_%",
+    SUM(spotify_2023.streams) as stream_sums,
+    count(*) as num_songs
+FROM spotify_2023
+GROUP BY "speechiness_%"
+ORDER BY "speechiness_%"
+
+--Relationship between BPM and streams for songs
+SELECT
+    bpm,
+    SUM(spotify_2023.streams) as stream_sums,
+    count(*) as num_songs
+FROM spotify_2023
+GROUP BY bpm
+ORDER BY bpm
+
+--Showcasing the SOLO (non-collab) artist that individually had a higher average stream count than the overall average stream for all songs released in 2023.
+--ie; Tones and I has the highest average streams overall of 2.8 billion vs 514 million average streams for all songs
+--remove WHERE artist_count = 1 to include collaborative efforts (menial information as most artist didnt do multiple collabs with the same person so data would be showing an average for 1 song)
+WITH artistStreams AS (
+    SELECT
+        spotify_2023.artists_names as names,
+        AVG(spotify_2023.streams) as avg_streams
+    FROM
+        spotify_2023
+    WHERE artist_count = 1
+    GROUP BY
+        artists_names
+)
+
+SELECT
+    names,
+    avg_streams
+FROM
+    artistStreams
+WHERE avg_streams > (SELECT AVG(streams) FROM spotify_2023)
+ORDER BY avg_streams DESC;
+
+
+--This query modifies the top one to find which artists/collabs released music in 2023
+--where their individual average streams were higher than the overall average streams for all songs released in 2023 which was approximated 147 million
+--ie; In this case, Miley Cyrus released "Flowers" which was an international hit for only being her single release in 2023
+WITH artistStreams AS (
+    SELECT
+        spotify_2023.artists_names as names,
+        AVG(spotify_2023.streams) as avg_streams
+    FROM
+        spotify_2023
+    WHERE
+          released_year = 2023
+    GROUP BY
+        artists_names
+    --Query can be modified even further to exclude single release entries by doing a simple count for artist_names being greater than 1
+   -- HAVING count(artists_names) > 1
+    --Jimin, NewJeans etc... releasing multiple songs in 2023 that reached above the average streams.
+)
+SELECT
+    names,
+    avg_streams
+FROM
+    artistStreams
+WHERE avg_streams > (SELECT AVG(streams) FROM spotify_2023 WHERE released_year = 2023)
+ORDER BY avg_streams DESC;
+
